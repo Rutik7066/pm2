@@ -104,7 +104,7 @@ class _CreateFolderState extends State<CreateFolder> {
                         },
                         onSaved: (v) {
                           if (v != null && v.isNotEmpty) {
-                            provider.title = v;
+                            provider.title = v.replaceAll(" ", "");;
                           }
                         },
                       ),
@@ -122,7 +122,7 @@ class _CreateFolderState extends State<CreateFolder> {
                           v as CustomerModal;
                           if (v.name.isNotEmpty || v.number.isNotEmpty) {
                             customController.text = v.name;
-                            provider.customer = v;
+                            provider.customer = v ; 
                           }
                         },
                         suggestionsCallback: (b) async => await CustomerRepo().getCustomer(b),
@@ -134,11 +134,11 @@ class _CreateFolderState extends State<CreateFolder> {
                             return null;
                           }
                         },
-                        onSaved: (v) {
-                          if (v != null && v.isNotEmpty) {
-                            provider.title = v;
-                          }
-                        },
+                        // onSaved: (v) {
+                        //   if (v != null && v.isNotEmpty) {
+                        //     // provider.title = v;
+                        //   }
+                        // },
                       ),
                     ),
                   ),
@@ -276,12 +276,17 @@ class _CreateFolderState extends State<CreateFolder> {
                               builder: (context) {
                                 return AlertDialog(
                                   content: SizedBox(
-                                    width: 680,
+                                    width: 700,
                                     child: Row(
                                       children: [
-                                        Text(
-                                          res,
-                                          style: textTheme.headline6!.copyWith(color: Colors.red),
+                                        SizedBox(
+                                          width: 650,
+                                          child: Text(
+
+                                            res,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: textTheme.headline6!.copyWith(color: Colors.red),
+                                          ),
                                         ),
                                         IconButton(
                                           onPressed: () => FlutterClipboard.copy(res),
