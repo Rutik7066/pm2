@@ -1,0 +1,18 @@
+WEB
+    Razorpay web site
+    Water Mark
+APP
+    Demo
+    Upgrade Account / Server
+
+
+Create Account
+Custome Name
+Customer Phone
+Customer Alt Phone
+Bussines Name
+Bussines Address 
+
+Key id =  rzp_live_ke2XNPaoJ3IbuK
+Key Secrete = vAr2uK7Gix5vp0I2ugJkxrWX
+    
