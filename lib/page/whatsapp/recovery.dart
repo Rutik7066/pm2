@@ -14,57 +14,6 @@ class Recovery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-            icon: Icon(Ionicons.add),
-            onPressed: () async {
-              await showDialog(
-                  context: context,
-                  builder: (context) {
-                    String number = '';
-                    return AlertDialog(
-                      title: const Text('Whatsapp Message'),
-                      content: SizedBox(
-                        width: 400,
-                        height: 60,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CustomFormTextField(
-                                labelText: 'Enter Number',
-                                onChanged: (p0) {
-                                  number = p0.toString();
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      actions: [
-                        TextBtn(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Cancel'),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              // backgroundColor: MaterialStateProperty.all(Colors.blue),
-                              fixedSize: MaterialStateProperty.all(const Size(150, 35)),
-                              // textStyle: MaterialStateProperty.all(const TextStyle(color: Colors.white)),
-                            ),
-                            onPressed: () async {
-                              print(number);
-                              await Whatsapp().createMessage(number: number, message: '');
-                            },
-                            child: const Text('Open Whatsapp'),
-                          ),
-                        ),
-                      ],
-                    );
-                  });
-            },
-            label: Text('Whatsapp Message')),
         body: StreamBuilder(
             stream: CustomerRepo().getRecoveryList(),
             builder: (context, snapshot) {

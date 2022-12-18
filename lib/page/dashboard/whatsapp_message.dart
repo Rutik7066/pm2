@@ -18,14 +18,10 @@ class WhatsappMessage extends StatefulWidget {
 }
 
 class _WhatsappMessageState extends State<WhatsappMessage> {
- 
-
   @override
   Widget build(BuildContext context) {
- 
     return Consumer<WhatsappMessageProvider>(
-      builder: (context, provider, child) => 
-       AlertDialog(
+      builder: (context, provider, child) => AlertDialog(
         title: const Text('Whatsapp Message'),
         content: SizedBox(
           width: 400,
@@ -69,7 +65,7 @@ class _WhatsappMessageState extends State<WhatsappMessage> {
                         .toList(),
                     onChanged: (o) {
                       print(widget.list.length);
-    
+
                       provider.chnageModal(o);
                     },
                   ),
@@ -87,9 +83,7 @@ class _WhatsappMessageState extends State<WhatsappMessage> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               style: ButtonStyle(
-                // backgroundColor: MaterialStateProperty.all(Colors.blue),
                 fixedSize: MaterialStateProperty.all(const Size(150, 35)),
-                // textStyle: MaterialStateProperty.all(const TextStyle(color: Colors.white)),
               ),
               onPressed: () async {
                 await Whatsapp().createMessage(

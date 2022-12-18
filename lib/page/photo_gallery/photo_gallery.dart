@@ -218,6 +218,7 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                                                         filterQuality: FilterQuality.high,
                                                         image: AdvancedNetworkImage(
                                                           folder.images.first.url,
+                                                          fallbackAssetImage: 'assets/pngLogo.png',
                                                           width: 150,
                                                           useDiskCache: true,
                                                           cacheRule: const CacheRule(maxAge: Duration(days: 7)),
@@ -237,7 +238,10 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                                               const Divider(),
                                               Container(
                                                 padding: const EdgeInsets.all(5),
-                                                child: Text(folder.awsId, overflow: TextOverflow.ellipsis,),
+                                                child: Text(
+                                                  folder.awsId,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
                                               ),
                                             ],
                                           ),

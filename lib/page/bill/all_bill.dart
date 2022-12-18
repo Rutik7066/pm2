@@ -41,11 +41,12 @@ class _ALlBillState extends State<ALlBill> {
                   ],
                   row: List.generate(snapshot.data!.length, (index) {
                     BillModal bill = snapshot.data!.reversed.elementAt(index);
+                    String date = "${bill.created.day}/${bill.created.month}/${bill.created.year}";
                     return DataRow2.byIndex(
                       index: index,
                       cells: [
                         DataCell(Text(bill.id.toString())),
-                        DataCell(Text(DateFormat.yMMMd().format(bill.created))),
+                        DataCell(Text(date)),
                         DataCell(Text('\u{20B9} ${bill.total}')),
                         DataCell(Text('\u{20B9} ${bill.dis}')),
                         DataCell(Text('\u{20B9} ${bill.finalamt}')),

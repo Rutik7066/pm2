@@ -62,7 +62,7 @@ class BillRepo {
 
   Stream<List<BillModal>> listenToBills() async* {
     final isar = await openDb();
-    yield* isar.billModals.where(sort: Sort.desc).watch(fireImmediately: true);
+    yield* isar.billModals.where().sortByCreated().watch(fireImmediately: true);
   }
 
   Stream<BillModal?> listToBill({required int id}) async* {

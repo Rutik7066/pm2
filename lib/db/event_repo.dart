@@ -1,5 +1,4 @@
 import 'package:isar/isar.dart';
-import 'package:pm/db/bill_repo.dart';
 import 'package:pm/db/db.dart';
 import 'package:pm/model/bill_modal.dart';
 import 'package:pm/model/cart_item.dart';
@@ -63,7 +62,7 @@ class EventRepo {
 
   Stream<List<EventModal>> listenToEvent() async* {
     final isar = await openDb();
-    yield* isar.eventModals.where(sort: Sort.desc).watch(fireImmediately: true);
+    yield* isar.eventModals.where().sortByDate().watch(fireImmediately: true);
   }
 
   Stream<List<EventModal>> listenToOlderEvent() async* {
@@ -75,6 +74,7 @@ class EventRepo {
     final isar = await openDb();
     yield* isar.eventModals.filter().dateGreaterThan(DateTime.now()).watch(fireImmediately: true);
   }
+
   Stream<EventModal?> listenToSingleEvent(int id) async* {
     final isar = await openDb();
     yield* isar.eventModals.watchObject(id, fireImmediately: true);

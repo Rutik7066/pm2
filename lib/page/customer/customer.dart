@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:pm/common_widget/border_container.dart';
 import 'package:provider/provider.dart';
 
 import 'package:pm/common_widget/custom_text_input.dart';
@@ -61,84 +62,88 @@ class Customer extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     List<CustomerModal> customerList = snapshot.data ?? [];
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ExpansionPanelList.radio(
-                        elevation: 0,
-                        expandedHeaderPadding: EdgeInsets.zero,
-                        animationDuration: const Duration(milliseconds: 600),
-                        children: List.generate(
-                          customerList.length,
-                          (index) {
-                            CustomerModal customer = customerList.elementAt(index);
-                            return ExpansionPanelRadio(
-                              headerBuilder: (context, isOpen) => Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Text(
-                                  customer.name,
-                                  style: textTheme.bodyLarge,
-                                ),
-                              ),
-                              canTapOnHeader: true,
-                              body: Ink(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: customer.dues <= 0 ? Colors.green.shade50 : Colors.red.shade50,
-                                ),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return CustomerPage(customerId: customer.id);
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'Customer Number : ${customer.number}',
-                                                  style: textTheme.bodyLarge,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                customer.dues > 0
-                                                    ? Text(
-                                                        'Customer Dues : \u20B9 ${customer.dues}',
-                                                        style: textTheme.bodyLarge,
-                                                      )
-                                                    : Text(
-                                                        'Customer Advance:  \u20B9 ${customer.dues.abs()}',
-                                                        style: textTheme.bodyLarge,
-                                                      ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                    return BorderContainer(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ExpansionPanelList.radio(
+                          elevation: 0,
+                          expandedHeaderPadding: EdgeInsets.zero,
+                          animationDuration: const Duration(milliseconds: 600),
+                          children: List.generate(
+                            customerList.length,
+                            (index) {
+                              CustomerModal customer = customerList.elementAt(index);
+                              return ExpansionPanelRadio(
+                                headerBuilder: (context, isOpen) => Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text(
+                                    customer.name,
+                                    style: textTheme.bodyLarge!.copyWith(
+                                      color: customer.dues <= 0 ? Colors.green : Colors.red,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              value: customer,
-                            );
-                          },
+                                canTapOnHeader: true,
+                                body: Ink(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: customer.dues <= 0 ? Colors.green.shade50 : Colors.red.shade50,
+                                  ),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return CustomerPage(customerId: customer.id);
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    'Customer Number : ${customer.number}',
+                                                    style: textTheme.bodyLarge,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                children: [
+                                                  customer.dues > 0
+                                                      ? Text(
+                                                          'Customer Dues : \u20B9 ${customer.dues}',
+                                                          style: textTheme.bodyLarge,
+                                                        )
+                                                      : Text(
+                                                          'Customer Advance:  \u20B9 ${customer.dues.abs()}',
+                                                          style: textTheme.bodyLarge,
+                                                        ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                value: customer,
+                              );
+                            },
+                          ),
                         ),
                       ),
                     );

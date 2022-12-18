@@ -290,7 +290,7 @@ class _CreateFolderState extends State<CreateFolder> {
                                         ),
                                         IconButton(
                                           onPressed: () => FlutterClipboard.copy(res),
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Ionicons.clipboard_outline,
                                           ),
                                           iconSize: 15,

@@ -33,26 +33,20 @@ class CreditManagement extends StatelessWidget {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         CustomerModal customer = snapshot.data!.elementAt(index);
-                        return BorderContainer(
-                          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-                          bordeColor: Colors.grey.shade300,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          child: ListTile(
-                            title: Text(
-                              customer.name,
-                              style: textTheme.bodyLarge,
-                            ),
-                            trailing: CChip(
-                              needRuppe: true,
-                              title: customer.dues.abs().toString(),
-                              themeColor: customer.dues > 0 ? Colors.red : Colors.green,
-                            ),
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CustomerCreditPage(id: customer.id),
-                              ),
+                        return ListTile(
+                          title: Text(
+                            customer.name,
+                            style: textTheme.bodyLarge!.copyWith(color: customer.dues > 0 ? Colors.red : Colors.green),
+                          ),
+                          trailing: CChip(
+                            needRuppe: true,
+                            title: customer.dues.abs().toString(),
+                            themeColor: customer.dues > 0 ? Colors.red : Colors.green,
+                          ),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CustomerCreditPage(id: customer.id),
                             ),
                           ),
                         );

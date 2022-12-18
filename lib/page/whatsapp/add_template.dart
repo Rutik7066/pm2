@@ -20,7 +20,7 @@ class _AddTemplateState extends State<AddTemplate> {
   Widget build(BuildContext context) {
     String? title = widget.modal?.name;
     String? temp = widget.modal?.message;
-    return  AlertDialog(
+    return AlertDialog(
       content: SizedBox(
         width: 500,
         height: 300,
@@ -66,25 +66,24 @@ class _AddTemplateState extends State<AddTemplate> {
       ),
       actions: [
         ElevatedBtn(
-          child: const Text('Add'),
+          child: Text(widget.modal == null ? "Add" : "Update"),
           onPressed: () async {
             if (formKey.currentState!.validate()) {
               formKey.currentState!.save();
-              if(widget.modal != null){
-              widget.modal!.name = title ?? 'Whatsapp Template';
-              widget.modal!.message = temp ?? 'Whatsapp Template';
-              await WhatsappTempRepo().createWhatsappTemp(widget.modal!).then((value) {
-                Navigator.pop(context);
-              });
-              }else{
- WhatsappModal modal =  WhatsappModal()..name = title ?? ''..message = temp ?? '';
-              await WhatsappTempRepo().createWhatsappTemp(modal).then((value) {
-                Navigator.pop(context);
-              });
-
+              if (widget.modal != null) {
+                widget.modal!.name = title ?? 'Whatsapp Template';
+                widget.modal!.message = temp ?? 'Whatsapp Template';
+                await WhatsappTempRepo().createWhatsappTemp(widget.modal!).then((value) {
+                  Navigator.pop(context);
+                });
+              } else {
+                WhatsappModal modal = WhatsappModal()
+                  ..name = title ?? ''
+                  ..message = temp ?? '';
+                await WhatsappTempRepo().createWhatsappTemp(modal).then((value) {
+                  Navigator.pop(context);
+                });
               }
-              
-              
             }
           },
         ),

@@ -192,9 +192,11 @@ class CreateFolderProvider extends ChangeNotifier {
         Hive.box('dll12').put('credit ', data['credit']);
         notifyListeners();
         print(title);
-        String  link = "https://photographymanager.in/photogallery?uid=${User.fromBox().uid}&folder=$title";
-        await Whatsapp().createMessage(number: customer!.number, message: 
-        link,);
+        String link = "https://photographymanager.in/photogallery?uid=${User.fromBox().uid}&folder=$title";
+        await Whatsapp().createMessage(
+          number: customer!.number,
+          message: "Click on this for selection $link",
+        );
         return link;
       } else if (res.statusCode == 401) {
         error = "Insufficient Credit";
@@ -212,7 +214,7 @@ class CreateFolderProvider extends ChangeNotifier {
     images = [];
     qtyCompleted = 0;
     uploadFlag = 1;
-    error = null;
+    error = null; //d 7219656111
     notifyListeners();
   }
 

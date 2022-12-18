@@ -78,6 +78,7 @@ class AllEvent extends StatelessWidget {
                         ],
                         row: List.generate(eventList.length, (index) {
                           EventModal event = eventList[index];
+                          String date = '${event.date.day}/${event.date.month}/${event.date.year}';
                           return DataRow2.byIndex(
                             index: index,
                             onTap: () {
@@ -92,7 +93,7 @@ class AllEvent extends StatelessWidget {
                             },
                             cells: [
                               DataCell(Text('${index + 1}')),
-                              DataCell(Text(DateFormat.MMMEd().format(eventList[index].date))),
+                              DataCell(Text(date)),
                               DataCell(Text(eventList[index].title)),
                               DataCell(Text(eventList[index].customer.value!.name)),
                               DataCell(Text(eventList[index].bill.value!.finalamt.toString())),
@@ -101,7 +102,6 @@ class AllEvent extends StatelessWidget {
                                 PopupMenuButton(
                                   itemBuilder: (context) {
                                     return [
-                              
                                       PopupMenuItem(
                                           child: const Text('Download Bill'),
                                           onTap: () async {

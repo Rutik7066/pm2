@@ -10,6 +10,7 @@ import 'package:pm/common_widget/border_container.dart';
 import 'package:pm/common_widget/custom_text_input.dart';
 import 'package:pm/common_widget/elevated_btn.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../Authentication/AppProvider.dart';
 
@@ -31,165 +32,186 @@ class _LogInState extends State<LogIn> {
     var app = Provider.of<AppProvider>(context);
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      body: Center(
-        child: Container(
-          child: Form(
-            key: formKey,
-            child: SizedBox(
-              width: 400,
-              height: 350,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset('assets/pngLogo.png', width: 30),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Photography Manager',
-                          style: textTheme.headline4,
-                        ),
-                      ),
-                    ],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(
+                    const Size(150, 35),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Log in',
-                      style: textTheme.headline4,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomFormTextField(
-                      // prefixIcon: Icon(Ion),
-                      labelText: 'Email',
-                      onSaved: (v) {
-                        email = v!;
-                      },
-                      validator: (b) {
-                        if (b == null || b.isEmpty) {
-                          return 'Enter Email';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomFormTextField(
-                      obscureText: true,
-                      labelText: 'Password',
-                      onSaved: (v) {
-                        pass = v!;
-                      },
-                      validator: (b) {
-                        if (b == null || b.isEmpty) {
-                          return 'Enter Password';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                  ),
-                  if (err != null)
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade50,
-                        border: Border.all(color: Colors.red, width: 0.2, strokeAlign: StrokeAlign.inside),
-                        borderRadius: const BorderRadius.all(Radius.circular(3)),
-                      ),
-                      child: Row(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(right: 10),
-                            child: Icon(
-                              MaterialIcons.sms_failed,
-                              size: 15,
-                              color: Colors.red,
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              err!,
-                              style: textTheme.bodyLarge!.copyWith(color: Colors.red),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          style: ButtonStyle(
-                            fixedSize: MaterialStateProperty.all(
-                              const Size(150, 35),
-                            ),
-                          ),
-                          child: const Text('Try 3 Day Demo'),
-                          onPressed: () async {
-                            var connectivityResult = await (Connectivity().checkConnectivity());
-                            if (connectivityResult == ConnectivityResult.none) {
-                              SnackBar snack = const SnackBar(
-                                content: Text('Internet Not Available'),
-                                backgroundColor: Colors.red,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(snack);
-                              return;
-                            }
-                            print(email + pass);
-                            String? res = await HttpCall().demo();
-                            if (res != null) {
-                              setState(() {
-                                err = res;
-                              });
-                            } else {
-                              app.recheck();
-                            }
-                          },
-                        ),
-                        ElevatedBtn(
-                          child: const Text('Log in'),
-                          onPressed: () async {
-                            var connectivityResult = await (Connectivity().checkConnectivity());
-                            if (connectivityResult == ConnectivityResult.none) {
-                              SnackBar snack = const SnackBar(
-                                content: Text('Internet Not Available'),
-                                backgroundColor: Colors.red,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(snack);
-                              return;
-                            }
-                            if (formKey.currentState!.validate()) {
-                              formKey.currentState!.save();
-                              print(email + pass);
-                              String? res = await HttpCall().login(email: email, password: pass);
-                              if (res != null) {
-                                setState(() {
-                                  err = res;
-                                });
-                              } else {
-                                app.recheck();
-                              }
-                            }
-                          },
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                ),
+                child: const Text('Try 3 Day Demo'),
+                onPressed: () async {
+                  var connectivityResult = await (Connectivity().checkConnectivity());
+                  if (connectivityResult == ConnectivityResult.none) {
+                    SnackBar snack = const SnackBar(
+                      content: Text('Internet Not Available'),
+                      backgroundColor: Colors.red,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snack);
+                    return;
+                  }
+                  print(email + pass);
+                  String? res = await HttpCall().demo();
+                  if (res != null) {
+                    setState(() {
+                      err = res;
+                    });
+                  } else {
+                    app.recheck();
+                  }
+                },
               ),
+            ],
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Container(
+                    child: Form(
+                      key: formKey,
+                      child: SizedBox(
+                        width: 400,
+                        height: 350,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/pngLogo.png', width: 30),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Photography Manager',
+                                    style: textTheme.headline4,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Log in',
+                                style: textTheme.headline4,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CustomFormTextField(
+                                // prefixIcon: Icon(Ion),
+                                labelText: 'Email',
+                                onSaved: (v) {
+                                  email = v!;
+                                },
+                                validator: (b) {
+                                  if (b == null || b.isEmpty) {
+                                    return 'Enter Email';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CustomFormTextField(
+                                obscureText: true,
+                                labelText: 'Password',
+                                onSaved: (v) {
+                                  pass = v!;
+                                },
+                                validator: (b) {
+                                  if (b == null || b.isEmpty) {
+                                    return 'Enter Password';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                            ),
+                            if (err != null)
+                              Container(
+                                margin: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.shade50,
+                                  border: Border.all(color: Colors.red, width: 0.2, strokeAlign: StrokeAlign.inside),
+                                  borderRadius: const BorderRadius.all(Radius.circular(3)),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 10),
+                                      child: Icon(
+                                        MaterialIcons.sms_failed,
+                                        size: 15,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        err!,
+                                        style: textTheme.bodyLarge!.copyWith(color: Colors.red),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  OutlinedBtn(
+                                    child: Text('Buy Now'),
+                                    onPressed: () => launchUrlString('www.photographymanager.in/create-account'),
+                                  ),
+                                  ElevatedBtn(
+                                    child: const Text('Log in'),
+                                    onPressed: () async {
+                                      var connectivityResult = await (Connectivity().checkConnectivity());
+                                      if (connectivityResult == ConnectivityResult.none) {
+                                        SnackBar snack = const SnackBar(
+                                          content: Text('Internet Not Available'),
+                                          backgroundColor: Colors.red,
+                                        );
+                                        ScaffoldMessenger.of(context).showSnackBar(snack);
+                                        return;
+                                      }
+                                      if (formKey.currentState!.validate()) {
+                                        formKey.currentState!.save();
+                                        print(email + pass);
+                                        String? res = await HttpCall().login(email: email, password: pass);
+                                        if (res != null) {
+                                          setState(() {
+                                            err = res;
+                                          });
+                                        } else {
+                                          app.recheck();
+                                        }
+                                      }
+                                    },
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

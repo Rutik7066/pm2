@@ -23,6 +23,7 @@ import 'package:routemaster/routemaster.dart';
 import 'package:hive/hive.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   var dir = Directory.current.path;
   print(dir);
   Hive.init(dir);
@@ -68,18 +69,18 @@ class MyApp extends StatelessWidget {
               ),
               routerDelegate: RoutemasterDelegate(routesBuilder: (context) {
                 app.check();
-              ;
-                if (app.isLoggedin) {
-         print('first raout');
-                  return route;
-                } else {
-                  print('second raout');
-                  return RouteMap(routes: {
-                    '/': (route) => const MaterialPage(
-                          child: LogIn(),
-                        ),
-                  });
-                }
+                return app.isLoggedin
+                    ? route
+                    : RouteMap(
+                        onUnknownRoute: (
+                          route,
+                        ) =>
+                            const Redirect('/'),
+                        routes: {
+                            '/': (route) => const MaterialPage(
+                                  child: LogIn(),
+                                ),
+                          });
               }),
               routeInformationParser: const RoutemasterParser(),
             ),

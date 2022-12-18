@@ -48,7 +48,7 @@ class Dashboard extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return ChangeNotifierProvider(
-                          create: (context)=> WhatsappMessageProvider(),
+                          create: (context) => WhatsappMessageProvider(),
                           child: WhatsappMessage(
                             list: list,
                           ),
@@ -79,7 +79,7 @@ class Dashboard extends StatelessWidget {
                       ],
                       row: List.generate(list.length, (index) {
                         DailyModal daily = list.elementAt(index);
-                        String date = DateFormat.yMMMd().format(daily.time);
+                        String date = "${daily.time.day}/${daily.time.month}/${daily.time.year}";
                         return DataRow2.byIndex(index: index, cells: [
                           DataCell(Text('${index + 1}')),
                           DataCell(Text(date)),

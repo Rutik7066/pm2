@@ -13,6 +13,7 @@ import 'package:pm/page/profile/add_credit.dart';
 import 'package:pm/page/profile/provider/add_credit_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -43,9 +44,8 @@ class Profile extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: TextBtn(
                       child: Text('Log Out'),
-                      onPressed: ()async {
+                      onPressed: () async {
                         await auth.logOut();
-                        
                       },
                     ),
                   )
@@ -175,15 +175,9 @@ class Profile extends StatelessWidget {
                             child: TextBtn(
                               child: const Text('Add Credit'),
                               onPressed: () async {
-                                var re = await AddCreditProvider().getPlan();
-                                await showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      content: AddCredit(planlist: re),
-                                    );
-                                  },
-                                );
+                                User user = User.fromBox();
+                                //https: //photographymanager.in/recharge?name=Kumar%20Thakre&email=jkstudio45@gmail.com&phone=9503679576&uid=3
+                                await launchUrlString("https://photographymanager.in/recharge?name=${user.name}&email=${user.email}&phone=${user.number}&uid=${user.uid}");
                               },
                             ),
                           )
