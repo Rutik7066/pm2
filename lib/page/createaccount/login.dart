@@ -34,10 +34,8 @@ class _LogInState extends State<LogIn> {
     return Scaffold(
       body: 
           
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+        
+           
                 Center(
                   child: Container(
                     child: Form(
@@ -174,10 +172,7 @@ class _LogInState extends State<LogIn> {
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-      
+            
     );
   }
 }
