@@ -2,12 +2,13 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 
 class Cdatatable extends StatelessWidget {
-  const Cdatatable({Key? key, this.tableBorder, this.border, required this.row, required this.columns, this.headingRowColor}) : super(key: key);
+  const Cdatatable({Key? key, this.tableBorder, this.dataRowColor, this.border, required this.row, required this.columns, this.headingRowColor}) : super(key: key);
   final List<DataRow> row;
   final List<DataColumn> columns;
   final Color? headingRowColor;
   final bool? tableBorder;
   final bool? border;
+  final Color? dataRowColor;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,7 @@ class Cdatatable extends StatelessWidget {
         ),
       ),
       headingRowColor: MaterialStateProperty.all(headingRowColor),
+      dataRowColor:  MaterialStateProperty.all(dataRowColor),
       columns: columns,
       rows: row,
       headingRowHeight: 45,

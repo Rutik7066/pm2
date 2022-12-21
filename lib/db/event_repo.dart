@@ -51,12 +51,12 @@ class EventRepo {
           ..date = event.date.day
           ..month = event.date.month;
         await isar.celebrationModals.put(cele);
-        DailyModal dail = DailyModal()
-          ..amt = bill.paid
-          ..note = 'Event Bill'
-          ..time = DateTime.now();
-        await isar.dailyModals.put(dail);
       }
+      DailyModal dail = DailyModal()
+        ..amt = bill.paid
+        ..note = 'Event Bill'
+        ..time = DateTime.now();
+      await isar.dailyModals.put(dail);
     });
   }
 

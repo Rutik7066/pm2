@@ -86,31 +86,7 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                               ),
                               Row(
                                 children: [
-                                  Expanded(
-                                    child: BorderContainer(
-                                      height: 80,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                                            child: Text(
-                                              'Credit',
-                                              style: textTheme.titleLarge!.copyWith(color: Colors.black54),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              User.fromBox().credit.toString(),
-                                              style: textTheme.titleLarge!.copyWith(color: Colors.black),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                          
                                   Expanded(
                                     child: BorderContainer(
                                       height: 80,

@@ -32,42 +32,8 @@ class _LogInState extends State<LogIn> {
     var app = Provider.of<AppProvider>(context);
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                style: ButtonStyle(
-                  fixedSize: MaterialStateProperty.all(
-                    const Size(150, 35),
-                  ),
-                ),
-                child: const Text('Try 3 Day Demo'),
-                onPressed: () async {
-                  var connectivityResult = await (Connectivity().checkConnectivity());
-                  if (connectivityResult == ConnectivityResult.none) {
-                    SnackBar snack = const SnackBar(
-                      content: Text('Internet Not Available'),
-                      backgroundColor: Colors.red,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snack);
-                    return;
-                  }
-                  print(email + pass);
-                  String? res = await HttpCall().demo();
-                  if (res != null) {
-                    setState(() {
-                      err = res;
-                    });
-                  } else {
-                    app.recheck();
-                  }
-                },
-              ),
-            ],
-          ),
+      body: 
+          
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -211,8 +177,7 @@ class _LogInState extends State<LogIn> {
               ],
             ),
           ),
-        ],
-      ),
+      
     );
   }
 }

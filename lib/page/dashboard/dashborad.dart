@@ -70,6 +70,7 @@ class Dashboard extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Cdatatable(
                       headingRowColor: Colors.indigo.shade50,
+       
                       border: true,
                       columns: const [
                         DataColumn2(label: Text('Index')),

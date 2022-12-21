@@ -160,29 +160,7 @@ class Profile extends StatelessWidget {
                           style: texttheme.bodyLarge,
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Text(
-                              'Photo Gallery Credit : ${user.credit}',
-                              style: texttheme.bodyLarge,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: TextBtn(
-                              child: const Text('Add Credit'),
-                              onPressed: () async {
-                                User user = User.fromBox();
-                                //https: //photographymanager.in/recharge?name=Kumar%20Thakre&email=jkstudio45@gmail.com&phone=9503679576&uid=3
-                                await launchUrlString("https://photographymanager.in/recharge?name=${user.name}&email=${user.email}&phone=${user.number}&uid=${user.uid}");
-                              },
-                            ),
-                          )
-                        ],
-                      ),
+                    
                     ],
                   ),
                 ],
