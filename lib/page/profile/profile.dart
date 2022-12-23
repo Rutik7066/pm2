@@ -4,11 +4,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:isar/isar.dart';
 import 'package:pm/Authentication/AppProvider.dart';
 import 'package:pm/common_widget/border_container.dart';
 import 'package:pm/Authentication/user.dart';
 import 'package:pm/common_widget/custom_text_input.dart';
 import 'package:pm/common_widget/elevated_btn.dart';
+import 'package:pm/db/db.dart';
 import 'package:pm/page/profile/add_credit.dart';
 import 'package:pm/page/profile/provider/add_credit_provider.dart';
 import 'package:provider/provider.dart';
@@ -40,14 +42,26 @@ class Profile extends StatelessWidget {
                       style: texttheme.headlineSmall,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextBtn(
-                      child: Text('Log Out'),
-                      onPressed: () async {
-                        await auth.logOut();
-                      },
-                    ),
+                  PopupMenuButton(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: const Text('Log out'),
+                        onTap: () async {
+                          await auth.logOut();
+                        },
+                      ),
+                      PopupMenuItem(
+                        child: const Text('Back up'),
+                        onTap: () async {
+                          String? dir = await FilePicker.platform.getDirectoryPath();
+                          if (dir != null) {
+                            final isar = await openDb();
+                            isar.copyToFile('$dir/K.isar');
+                          
+                          }
+                        },
+                      ),
+                    ],
                   )
                 ],
               ),
@@ -160,7 +174,6 @@ class Profile extends StatelessWidget {
                           style: texttheme.bodyLarge,
                         ),
                       ),
-                    
                     ],
                   ),
                 ],

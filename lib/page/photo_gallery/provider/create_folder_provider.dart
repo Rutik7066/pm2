@@ -115,7 +115,7 @@ class CreateFolderProvider extends ChangeNotifier {
         }
       } else {
         break;
-      }
+      } 
     }
     print('Spawned isolate finished.');
     Isolate.exit();

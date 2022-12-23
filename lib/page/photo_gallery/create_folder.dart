@@ -104,7 +104,8 @@ class _CreateFolderState extends State<CreateFolder> {
                         },
                         onSaved: (v) {
                           if (v != null && v.isNotEmpty) {
-                            provider.title = v.replaceAll(" ", "");;
+                            provider.title = v.replaceAll(" ", "");
+                            ;
                           }
                         },
                       ),
@@ -122,7 +123,7 @@ class _CreateFolderState extends State<CreateFolder> {
                           v as CustomerModal;
                           if (v.name.isNotEmpty || v.number.isNotEmpty) {
                             customController.text = v.name;
-                            provider.customer = v ; 
+                            provider.customer = v;
                           }
                         },
                         suggestionsCallback: (b) async => await CustomerRepo().getCustomer(b),
@@ -157,10 +158,9 @@ class _CreateFolderState extends State<CreateFolder> {
                         ),
                         onTap: () async {
                           FilePickerResult? result = await FilePicker.platform.pickFiles(
+                            allowCompression: true,
                             allowMultiple: true,
-                            type: FileType.custom,
                             lockParentWindow: false,
-                            allowedExtensions: ['jpg', 'jpeg'],
                           );
                           if (result != null) {
                             provider.addImages(result.files);
@@ -282,7 +282,6 @@ class _CreateFolderState extends State<CreateFolder> {
                                         SizedBox(
                                           width: 650,
                                           child: Text(
-
                                             res,
                                             overflow: TextOverflow.ellipsis,
                                             style: textTheme.headline6!.copyWith(color: Colors.red),

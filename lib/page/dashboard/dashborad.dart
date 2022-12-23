@@ -30,7 +30,7 @@ class Dashboard extends StatelessWidget {
             'Dashboard',
             style: textheme.headlineSmall,
           ),
-        ),
+        ), 
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
