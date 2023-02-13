@@ -60,6 +60,31 @@ class EventRepo {
     });
   }
 
+  Future addPaymentToEvent(EventModal event, int payment) async {
+    final isar = await openDb();
+    TransactionModal tran = TransactionModal()
+      ..time = DateTime.now()
+      ..title = "Payment for ${event.title}"
+      ..transactionAmt = payment.toDouble()
+      ..customer.value = event.customer.value;
+    await isar.writeTxn(() async {
+      event.bill.value?.dues = event.bill.value!.dues - payment;
+      event.bill.value?.paid = event.bill.value!.paid + payment;
+      await isar.eventModals.put(event);
+      await isar.billModals.put(event.bill.value!);
+      if (event.customer.value != null) {
+        event.customer.value!.dues = event.customer.value!.dues - payment;
+        await isar.customerModals.put(event.customer.value!);
+
+        print(event.customer.value?.dues);
+      }
+      await isar.transactionModals.put(tran);
+      await event.bill.save();
+      event.customer.value?.transaction.add(tran);
+      event.customer.value?.transaction.save();
+    });
+  }
+
   Stream<List<EventModal>> listenToEvent() async* {
     final isar = await openDb();
     yield* isar.eventModals.where().sortByDate().watch(fireImmediately: true);

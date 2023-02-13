@@ -104,8 +104,7 @@ class _CreateFolderState extends State<CreateFolder> {
                         },
                         onSaved: (v) {
                           if (v != null && v.isNotEmpty) {
-                            provider.title = v.replaceAll(" ", "");
-                            ;
+                            provider.title = v;
                           }
                         },
                       ),
@@ -123,7 +122,7 @@ class _CreateFolderState extends State<CreateFolder> {
                           v as CustomerModal;
                           if (v.name.isNotEmpty || v.number.isNotEmpty) {
                             customController.text = v.name;
-                            provider.customer = v;
+                            provider.customer = v.number;
                           }
                         },
                         suggestionsCallback: (b) async => await CustomerRepo().getCustomer(b),

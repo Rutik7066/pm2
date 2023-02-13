@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class User {
-  late int uid;
+  late String id;
   late String name;
   late String number;
   String? altnumber;
@@ -16,14 +16,14 @@ class User {
   String? youtube;
   String? snap;
   late String ip;
-  late int planprice;
+  late String planprice;
   late int credit;
   Uint8List? logo;
   DateTime? validtill;
   String? terms;
   User({
     this.logo,
-    required this.uid,
+    required this.id,
     required this.name,
     required this.number,
     this.altnumber,
@@ -47,13 +47,13 @@ class User {
   factory User.fromBox() {
     Box map = Hive.box('dll12');
     return User(
-      uid: map.get('uid') ?? 0,
-      name: map.get('customer_name') ?? "",
-      number: map.get('customer_phone') ?? "",
-      altnumber: map.get('customer_alt_phone') ?? "",
+      id: map.get('id') ?? '',
+      name: map.get('name') ?? "",
+      number: map.get('number') ?? "",
+      altnumber: map.get('altnumber') ?? "",
       bussinessname: map.get('business_name') ?? "",
       bussinessadress: map.get('business_address') ?? "",
-      email: map.get('customer_email') ?? "",
+      email: map.get('email') ?? "",
       pass: map.get('password') ?? "",
       web: map.get('web') ?? "",
       fb: map.get('fb_id') ?? "",
@@ -61,7 +61,7 @@ class User {
       youtube: map.get('youtube') ?? "",
       snap: map.get('snap_id') ?? "",
       ip: map.get('ip_address') ?? "",
-      planprice: map.get('plan_price') ?? 0,
+      planprice: map.get('plan_price').toString(),
       credit: map.get('credit') ?? 0,
       validtill: DateTime.tryParse(map.get('valid_till').toString()),
       logo: map.get('logo'),
@@ -71,13 +71,13 @@ class User {
 
   factory User.listenable(Box map) {
     return User(
-      uid: map.get('uid') ?? 0,
-      name: map.get('customer_name') ?? "",
-      number: map.get('customer_phone') ?? "",
-      altnumber: map.get('customer_alt_phone') ?? "",
+      id: map.get('id') ?? '',
+      name: map.get('name') ?? "",
+      number: map.get('number') ?? "",
+      altnumber: map.get('altnumber') ?? "",
       bussinessname: map.get('business_name') ?? "",
       bussinessadress: map.get('business_address') ?? "",
-      email: map.get('customer_email') ?? "",
+      email: map.get('email') ?? "",
       pass: map.get('password') ?? "",
       web: map.get('web') ?? "",
       fb: map.get('fb_id') ?? "",
@@ -85,7 +85,7 @@ class User {
       youtube: map.get('youtube') ?? "",
       snap: map.get('snap_id') ?? "",
       ip: map.get('ip_address') ?? "",
-      planprice: map.get('plan_price') ?? 0,
+      planprice: map.get('plan_price') ?? "",
       credit: map.get('credit') ?? 0,
       validtill: DateTime.tryParse(map.get('valid_till').toString()),
       logo: map.get('logo'),
@@ -95,25 +95,26 @@ class User {
 
   @override
   String toString() {
-    return 'User(uid: $uid, name: $name, number: $number, altnumber: $altnumber, bussinessname: $bussinessname, bussinessadress: $bussinessadress, email: $email, pass: $pass, web: $web, fb: $fb, insta: $insta, youtube: $youtube, snap: $snap, ip: $ip, planprice: $planprice, credit: $credit, validtill: $validtill)';
+    return 'User(id: $id, name: $name, number: $number, altnumber: $altnumber, bussinessname: $bussinessname, bussinessadress: $bussinessadress, email: $email, pass: $pass, web: $web, fb: $fb, insta: $insta, youtube: $youtube, snap: $snap, ip: $ip, planprice: $planprice, credit: $credit, validtill: $validtill)';
   }
 }
 
 Box map = Hive.box('dll12');
 
-Future<void> addUser(Map<String, dynamic> reqmap) async {
+Future<void> addUser(Map<String, dynamic> reqmap, id) async {
+  reqmap['id'] = id;
   await map.putAll(reqmap);
 }
 
 User getUser() {
   return User(
-    uid: map.get('uid') ?? "",
-    name: map.get('customer_name') ?? "",
-    number: map.get('customer_phone') ?? "",
-    altnumber: map.get('customer_alt_phone') ?? "",
+    id: map.get('id') ?? "",
+    name: map.get('name') ?? "",
+    number: map.get('number') ?? "",
+    altnumber: map.get('altnumber') ?? "",
     bussinessname: map.get('business_name') ?? "",
     bussinessadress: map.get('business_address') ?? "",
-    email: map.get('customer_email') ?? "",
+    email: map.get('email') ?? "",
     pass: map.get('password') ?? "",
     web: map.get('web') ?? "",
     fb: map.get('fb_id') ?? "",

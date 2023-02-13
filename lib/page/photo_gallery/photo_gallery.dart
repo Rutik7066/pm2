@@ -6,12 +6,16 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:pm/Authentication/user.dart';
 import 'package:pm/common_widget/border_container.dart';
 import 'package:pm/db/folder_repo.dart';
+import 'package:pm/model/folder_image.dart';
 
 import 'package:pm/model/job_modal.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:pm/page/photo_gallery/folder_page.dart';
 import 'package:pm/page/photo_gallery/provider/cloud_gallery_provider.dart';
+import 'package:pm/pb.dart';
+import 'package:pm/util/util.dart';
+import 'package:pocketbase/pocketbase.dart';
 import 'package:provider/provider.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -62,14 +66,16 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                 ));
               } else {
                 if (provider.reqCode == 1) {
-                  return StreamBuilder(
-                      stream: FolderRepo().listenToFolder(),
+                  return FutureBuilder(
+                      initialData: const <RecordModel>[],
+                      future: pb.collection('folder').getFullList(batch: 200, sort: '-created', expand: "images"),
                       builder: (context, snapshot) {
+                        print('Photogapllery');
                         if (snapshot.hasData) {
-                          List<JobModal> folders = snapshot.data ?? [];
+                          List<FolderModal> folders = convertRecordToFolder(snapshot.data!);
                           String total = folders.length.toString();
-                          String folderOpened = folders.where((element) => element.status == 1).length.toString();
-                          String folderSelected = folders.where((element) => element.status == 2).length.toString();
+                          String folderOpened = folders.where((element) => element.status == "1").length.toString();
+                          String folderSelected = folders.where((element) => element.status == "2").length.toString();
                           print(folders);
                           return Column(
                             children: [
@@ -86,7 +92,6 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                               ),
                               Row(
                                 children: [
-                          
                                   Expanded(
                                     child: BorderContainer(
                                       height: 80,
@@ -173,19 +178,21 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                                     crossAxisSpacing: 16,
                                     padding: const EdgeInsets.all(8),
                                     children: List.generate(folders.length, (index) {
-                                      JobModal folder = folders.elementAt(index);
+                                      FolderModal folder = folders.elementAt(index);
                                       return BorderContainer(
                                         width: 170,
                                         child: InkWell(
                                           splashFactory: InkRipple.splashFactory,
-                                          onTap: () => Navigator.push(
+                                          onTap: () {
+                                            Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) => FolderPage(
                                                   folderId: folder.id,
-                                                  backendId: folder.backendId,
                                                 ),
-                                              )),
+                                              ),
+                                            );
+                                          },
                                           child: Column(
                                             children: [
                                               Expanded(
@@ -193,7 +200,12 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                                                     ? Image(
                                                         filterQuality: FilterQuality.high,
                                                         image: AdvancedNetworkImage(
-                                                          folder.images.first.url,
+                                                          getImageUrl(
+                                                            collectionId: folder.expand.images.first.collectionId,
+                                                            recordID: folder.expand.images.first.id,
+                                                            imageName: folder.expand.images.first.image,
+                                                            size: '0x0',
+                                                          ),
                                                           fallbackAssetImage: 'assets/pngLogo.png',
                                                           width: 150,
                                                           useDiskCache: true,
@@ -215,7 +227,7 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                                               Container(
                                                 padding: const EdgeInsets.all(5),
                                                 child: Text(
-                                                  folder.awsId,
+                                                  folder.collectionName,
                                                   overflow: TextOverflow.ellipsis,
                                                 ),
                                               ),

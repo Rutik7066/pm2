@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:pm/Authentication/httpcall_dbop.dart';
 import 'package:pm/Authentication/user.dart';
 import 'package:pm/const.dart';
+import 'package:pm/pb.dart';
 
 class HttpCall {
   String orderId = '';
@@ -22,7 +24,7 @@ class HttpCall {
     var body = {
       'order_amount': 700.00.toString(),
       "order_note": 'Purchase 1 year',
-      'uid': User.fromBox().uid.toString(),
+      'id': User.fromBox().id.toString(),
       'customer_name': name,
       'customer_email': email,
       'customer_phone': '+91$phone',
@@ -47,17 +49,19 @@ class HttpCall {
     return qrimg;
   }
 
-  Future<String?> login({required String email, required String password}) async {
-    Uri url = Uri.parse('$host/login');
-    print('$host/login');
-    var headers = {'content-type': 'application/json'};
-    var body = jsonEncode({"email": email, "password": password});
-    var res = await http.post(url, body: body);
-    if (res.statusCode == 200) {
-      await HttpCallDbop().loginDbOp(jsonDecode(res.body));
+  Future<bool> login({required String email, required String password}) async {
+    final authData = await pb.collection('userpm').authWithPassword(
+          email,
+          password,
+        );
+    log(authData.record!.id);
+    print(pb.authStore.isValid);
+
+    if (pb.authStore.isValid) {
+      print(authData.record?.data);
+      addUser(authData.record!.data, authData.record!.id);
     }
-    print(res.body);
-    return jsonDecode(res.body)['message'];
+    return pb.authStore.isValid;
   }
 
   Future<String?> demo() async {
@@ -65,7 +69,6 @@ class HttpCall {
     print('$host/demo');
     var headers = {'content-type': 'application/json'};
     var body = jsonEncode({
-
       "customer_name": "Demo Account",
       "customer_phone": "1111111111",
       "customer_alt_phone": "2222222222",
@@ -76,11 +79,10 @@ class HttpCall {
       "fb_id": "fb_id",
       "snap_id": "snap_id",
       "insta_id": "insta_id",
-      'web' :'www.photographymanager.in',
-      'youtube' : 'youtube',
+      'web': 'www.photographymanager.in',
+      'youtube': 'youtube',
       "ip_address": "ip_address",
       "plan_price": 0.00,
- 
       "jobs": [],
     });
     var res = await http.post(url, body: body);

@@ -14,7 +14,7 @@ class CloudGalleryProvider extends ChangeNotifier {
   int reqCode = 1;
   Future<void> getCustomer() async {
     Uri url = Uri.parse('$host/getcustomer');
-    var re = await post(url, headers: {'content-type': 'application/json'}, body: jsonEncode({"uid": User.fromBox().uid}));
+    var re = await post(url, headers: {'content-type': 'application/json'}, body: jsonEncode({"id": User.fromBox().id}));
     if (re.statusCode == 200) {
       print(re.body);
       var result = await HttpCallDbop().getCustomer(jsonDecode(re.body));
@@ -27,12 +27,12 @@ class CloudGalleryProvider extends ChangeNotifier {
       reqCode = 2;
       notifyListeners();
     }
-  }// gjhgjghjgjh
+  } // gjhgjghjgjh
 
   Future<void> getCustomer2() async {
     try {
       Uri url = Uri.parse('$host/getcustomer');
-      var re = await post(url, headers: {'content-type': 'application/json'}, body: jsonEncode({"uid": User.fromBox().uid}));
+      var re = await post(url, headers: {'content-type': 'application/json'}, body: jsonEncode({"id": User.fromBox().id}));
       if (re.statusCode == 200) {
         print(re.statusCode);
         await HttpCallDbop().getCustomer(jsonDecode(re.body));

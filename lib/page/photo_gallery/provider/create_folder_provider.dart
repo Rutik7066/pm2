@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, prefer_interpolation_to_compose_strings
 
 import 'dart:convert';
+import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:math';
@@ -19,7 +20,9 @@ import 'package:pm/const.dart';
 import 'package:pm/db/folder_repo.dart';
 import 'package:pm/model/customer_modal.dart';
 import 'package:pm/page/dashboard/whatsapp_message.dart';
+import 'package:pm/pb.dart';
 import 'package:pm/util/whatsapp.dart';
+import 'package:pocketbase/pocketbase.dart';
 
 class CreateFolderProvider extends ChangeNotifier {
   int uploadFlag = 10;
@@ -31,14 +34,14 @@ class CreateFolderProvider extends ChangeNotifier {
   int uploadTotal = 0;
 //
   List<Map<String, dynamic>> compressingFile = [];
-  CustomerModal? customer;
+  String? customer;
 
   ///
   String? error;
-  String title = 'title ${DateTime.now().microsecond}';
+  String title = 'title';
   //
 
-  void selectCust(CustomerModal cu) {
+  void selectCust(String cu) {
     customer = cu;
     notifyListeners();
   }
@@ -115,20 +118,24 @@ class CreateFolderProvider extends ChangeNotifier {
         }
       } else {
         break;
-      } 
+      }
     }
     print('Spawned isolate finished.');
     Isolate.exit();
   }
 
   Future<String?> uploadMultipart() async {
-    var url = '$host/createfolder';
-    String dir = getDir();
-    var form = dio.FormData();
-    form.fields.add(MapEntry('uid', User.fromBox().uid.toString()));
-    form.fields.add(MapEntry('title', title));
-    form.fields.add(MapEntry('dir', dir));
-    // Creating Main Isolate's Receive Port
+// example create body
+
+    final body = <String, dynamic>{
+      "user": User.fromBox().id.toString(),
+      'title': title,
+      "length": images.length,
+      "status": 0,
+      "customerid": customer,
+      "images": [],
+    };
+
     ReceivePort mainreceivePort = ReceivePort();
     // Spawning Child Isolate
     Isolate.spawn(isolateFunc, mainreceivePort.sendPort);
@@ -137,77 +144,56 @@ class CreateFolderProvider extends ChangeNotifier {
     SendPort childSendPort = await childEvent.next;
     uploadFlag = 0;
     notifyListeners();
-    // Looping
+
     for (var image in images) {
       // Sending Path to Compress
       childSendPort.send(image.path);
       // Waiting for response
       var i = await childEvent.next;
       // Printing Response
-      form.files.add(
-        MapEntry(
-          image.name,
-          dio.MultipartFile.fromBytes(
-            i,
-            filename: image.name,
-            contentType: MediaType('image', 'jpg'),
-          ),
-        ),
-      );
-      print('Form File Length => ${form.files.length}');
+      dev.log(i.toString());
+      final img = await pb.collection('images').create(body: {
+        "localurl": image.path,
+        "isSelected": true,
+      }, files: [
+        http.MultipartFile.fromBytes('image', i, filename: image.name)
+      ]);
+
+      body['images'].add(img.id);
       compressingFile[qtyCompleted]['status'] = "Compressed";
 
       qtyCompleted++;
       notifyListeners();
     }
-    // Ending Isolate
+
     childSendPort.send(null);
     uploadFlag = 1;
     notifyListeners();
-    var dioobj = dio.Dio();
-
     try {
-      var res = await dioobj.post(
-        url,
-        data: form,
-        options: dio.Options(contentType: 'multipart/form-data'),
-        onSendProgress: (count, total) {
-          uploadTotal = total / 1024 ~/ 1024;
-          uploadProgress = count / 1024 ~/ 1024;
-          notifyListeners();
-          print("${formatBytes(count, 0)}/${formatBytes(total, 0)}");
-        },
-      );
-      dioobj.close();
-
-      var data = res.data;
-      print(data);
+      final record = await pb.collection('folder').create(body: body);
       uploadFlag = 0;
       notifyListeners();
 
-      if (res.statusCode == 200) {
-        FolderRepo().addFolderFromMap(data['folder'], customer!);
-        qtyCompleted = 0;
-        uploadFlag = 2;
-        Hive.box('dll12').put('credit ', data['credit']);
-        notifyListeners();
-        print(title);
-        String link = "https://photographymanager.in/photogallery?uid=${User.fromBox().uid}&folder=$title";
+      qtyCompleted = 0;
+      uploadFlag = 2;
+
+      notifyListeners();
+      print(title);
+      String link = "https://photographymanager.in/photogallery?id=${record.id}";
+      if (customer != null) {
         await Whatsapp().createMessage(
-          number: customer!.number,
+          number: customer!,
           message: "Click on this for selection $link",
         );
-        return link;
-      } else if (res.statusCode == 401) {
-        error = "Insufficient Credit";
-      } else {
-        error = "Failed To Upload";
       }
-    } on dio.DioError catch (e) {
-      error = e.toString();
+      return link;
+    } on ClientException catch (e) {
+      dev.log(e.response["data"].toString());
+      dev.log(e.response.toString());
+      error = "Failed To Upload";
       notifyListeners();
+      return null;
     }
-    return null;
   }
 
   clearAllWith() {

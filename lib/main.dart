@@ -28,7 +28,6 @@ void main() async {
   print(dir);
   Hive.init(dir);
   await Hive.openBox('dll12');
-  await CloudGalleryProvider().getCustomer2();
   runApp(const MyApp());
 }
 

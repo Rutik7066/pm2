@@ -119,7 +119,7 @@ class _QrState extends State<Qr> {
             if (res.statusCode == 200) {
               Map<String, dynamic> data = jsonDecode(res.body);
               data.remove("jobs");
-              addUser(data).then((value) => app.recheck());
+              addUser(data,"").then((value) => app.recheck());
             } else {
               setState(() {
                 err = "Payment Failed.";

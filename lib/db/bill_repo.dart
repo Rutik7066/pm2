@@ -60,6 +60,28 @@ class BillRepo {
     return bill;
   }
 
+  Future addPaymentToBill(BillModal bill, int payment) async {
+    TransactionModal tran = TransactionModal()
+      ..time = DateTime.now()
+      ..title = "Payment for ${bill.id}"
+      ..transactionAmt = payment.toDouble()
+      ..customer.value = bill.customer.value;
+    final isar = await openDb();
+    await isar.writeTxn(() async {
+      bill.dues = bill.dues - payment;
+      bill.paid = bill.paid + payment;
+      if (bill.customer.value != null) {
+        bill.customer.value!.dues = bill.customer.value!.dues - payment;
+        await isar.customerModals.put(bill.customer.value!);
+        print(bill.customer.value?.dues);
+      }
+      await isar.billModals.put(bill);
+      await isar.transactionModals.put(tran);
+      bill.customer.value?.transaction.add(tran);
+      bill.customer.value?.transaction.save();
+    });
+  }
+
   Stream<List<BillModal>> listenToBills() async* {
     final isar = await openDb();
     yield* isar.billModals.where().sortByCreated().watch(fireImmediately: true);

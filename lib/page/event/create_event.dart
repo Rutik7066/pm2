@@ -453,6 +453,14 @@ class _CreateEventState extends State<CreateEvent> {
                                     provider.clearAll();
                                     cName.clear();
                                     cNumber.clear();
+                                        SnackBar snack = const SnackBar(
+                                      backgroundColor: Colors.green,
+                                      elevation: 5,
+                                      duration: Duration(seconds: 3),
+                                      content: Text('Event Added Succefully !.'),
+                                      behavior: SnackBarBehavior.floating,
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(snack);
                                   });
                                 }
                               }

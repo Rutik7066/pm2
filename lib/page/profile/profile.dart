@@ -57,7 +57,23 @@ class Profile extends StatelessWidget {
                           if (dir != null) {
                             final isar = await openDb();
                             isar.copyToFile('$dir/K.isar');
-                          
+                          }
+                        },
+                      ),
+                      PopupMenuItem(
+                        child: const Text('Back up'),
+                        onTap: () async {
+                          FilePickerResult? dir = await FilePicker.platform.pickFiles(allowMultiple: false, allowedExtensions: ['isar'], type: FileType.custom);
+                          if (dir != null) {
+                            File(dir.files[0].path ?? '').copySync('K.isar');
+                            SnackBar snack = const SnackBar(
+                              backgroundColor: Colors.green,
+                              elevation: 5,
+                              duration: Duration(seconds: 3),
+                              content: Text('Back Up Restored Succefully !.'),
+                              behavior: SnackBarBehavior.floating,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snack);
                           }
                         },
                       ),

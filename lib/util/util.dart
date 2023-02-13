@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pm/const.dart';
 
 class Util {
   static capture(GlobalKey? key, String customer) async {
@@ -27,3 +28,8 @@ class Util {
     }
   }
 }
+
+String getImageUrl({required String collectionId, required String recordID, required String imageName, required String size}) {
+  return "${backend}/api/files/${collectionId}/${recordID}/${imageName}${size != '' ? "?thumb=${size}" : ''}";
+}
+

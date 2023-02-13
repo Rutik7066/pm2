@@ -8,6 +8,7 @@ import 'package:http/http.dart';
 import 'package:image_compression_flutter/image_compression_flutter.dart';
 import 'package:pm/const.dart';
 import 'package:pm/db/folder_repo.dart';
+import 'package:pm/model/folder_image.dart';
 import 'package:pm/model/job_image_modal.dart';
 import 'package:pm/model/job_modal.dart';
 
@@ -30,13 +31,13 @@ class FolderPageProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> copyImage(List<JobImageModal> selectedImages, String path) async {
+  Future<void> copyImage(List<ImageModal> selectedImages, String path) async {
     totalImageToCopy = selectedImages.length;
     imageCopyed = 0;
     notifyListeners();
-    for (JobImageModal image in selectedImages) {
+    for (ImageModal image in selectedImages) {
       try {
-        File(image.localurl).copySync("$path/${image.name}");
+        File(image.localurl).copySync("$path/${image.image}");
         imageCopyed++;
         notifyListeners();
       } catch (e) {
@@ -45,10 +46,10 @@ class FolderPageProvider extends ChangeNotifier {
     }
   }
 
-  // Future<bool> deleteImage({required String uid, required int folderId, required JobImageModal image}) async {
+  // Future<bool> deleteImage({required String id, required int folderId, required JobImageModal image}) async {
   //   Uri url = Uri.parse('$host/deletefolder');
   //   Object body = jsonEncode({
-  //     "uid": uid,
+  //     "id": id,
   //     "folder_id": folderId,
   //     "image": [
   //       {
@@ -69,7 +70,7 @@ class FolderPageProvider extends ChangeNotifier {
   //   }
   // }
 
-  Future<bool> addImage({required List<PlatformFile> images, required String uid, required JobModal folder}) async {
+  Future<bool> addImage({required List<PlatformFile> images, required String id, required JobModal folder}) async {
     print(folder.awsId);
     loading = true;
     notifyListeners();
@@ -93,7 +94,7 @@ class FolderPageProvider extends ChangeNotifier {
 
     Uri url = Uri.parse('$host/addimage');
     Object body = jsonEncode({
-      "uid": uid,
+      "id": id,
       "aws_id": folder.awsId,
       "length": images.length,
       "image": map,

@@ -96,7 +96,7 @@ class FolderRepo {
   Stream<List<JobModal>> listenToFolder() async* {
     try {
       Uri url = Uri.parse('$host/getcustomer');
-      var re = await post(url, headers: {'content-type': 'application/json'}, body: jsonEncode({"uid": User.fromBox().uid}));
+      var re = await post(url, headers: {'content-type': 'application/json'}, body: jsonEncode({"id": User.fromBox().id}));
       if (re.statusCode == 200) {
         print(re.statusCode);
         await HttpCallDbop().getCustomer(jsonDecode(re.body));

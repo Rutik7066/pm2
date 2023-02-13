@@ -1,9 +1,10 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pm/Authentication/user.dart';
 import 'package:pm/common_widget/c_chip.dart';
 import 'package:pm/common_widget/c_datatable.dart';
+import 'package:pm/common_widget/custom_text_input.dart';
+import 'package:pm/common_widget/elevated_btn.dart';
 import 'package:pm/db/bill_repo.dart';
 import 'package:pm/model/bill_modal.dart';
 import 'package:pm/page/bill/billImage.dart';
@@ -74,6 +75,56 @@ class _ALlBillState extends State<ALlBill> {
                                     ),
                                   ),
                                 ),
+                                PopupMenuItem(
+                                    child: const Text('Add Payment'),
+                                    onTap: () async {
+                                      await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          int? amount = 0;
+                                          return AlertDialog(
+                                            title: const Text("Enter Payment Amount"),
+                                            contentPadding: EdgeInsets.zero,
+                                            content: SizedBox(
+                                              width: 350,
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(16.0),
+                                                child: CustomFormTextField(
+                                                  labelText: "Payment Amount",
+                                                  onChanged: (c) => {amount = int.tryParse(c)},
+                                                ),
+                                              ),
+                                            ),
+                                            actions: [
+                                              ElevatedBtn(
+                                                child: const Text("Cancel"),
+                                                onPressed: () => Navigator.of(context).pop(),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                child: ElevatedBtn(
+                                                  child: const Text("Add"),
+                                                  onPressed: () async {
+                                                    if (amount != null) {
+                                                      BillRepo()
+                                                          .addPaymentToBill(
+                                                            bill,
+                                                            amount!,
+                                                          )
+                                                          .whenComplete(
+                                                            () => Navigator.pop(
+                                                              context,
+                                                            ),
+                                                          );
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }),
                                 PopupMenuItem(
                                     child: const Text('Download'),
                                     onTap: () async {

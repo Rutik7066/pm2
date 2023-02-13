@@ -372,6 +372,17 @@ class _CreateBillState extends State<CreateBill> {
                                   if (value.customer.value != null) {
                                     await Whatsapp().createMessage(number: value.customer.value!.number, message: "");
                                   }
+                                
+                                SnackBar snack = const SnackBar(
+                                    backgroundColor: Colors.green,
+                                    elevation: 5,
+                                    duration: Duration(seconds: 3),
+                                    content: Text('Bill Created Succefully !.'),
+                                    behavior: SnackBarBehavior.floating,
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(snack);
+                                
+                                
                                 }
                               }
                             },
@@ -394,7 +405,7 @@ class _CreateBillState extends State<CreateBill> {
                                 ScaffoldMessenger.of(context).showSnackBar(snack);
                               } else {
                                 provider.finalamt = provider.total - provider.dis;
-                                print(provider.finalamt);
+                                
                                 if (formKey.currentState!.validate()) {
                                   formKey.currentState!.save();
                                   provider.createBill();
@@ -402,6 +413,14 @@ class _CreateBillState extends State<CreateBill> {
                                   provider.clearAll();
                                   cName.clear();
                                   cNumber.clear();
+                                      SnackBar snack = const SnackBar(
+                                    backgroundColor: Colors.green,
+                                    elevation: 5,
+                                    duration: Duration(seconds: 3),
+                                    content: Text('Bill Created Succefully !.'),
+                                    behavior: SnackBarBehavior.floating,
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(snack);
                                 }
                               }
                             },

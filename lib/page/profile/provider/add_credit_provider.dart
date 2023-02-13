@@ -38,7 +38,7 @@ class AddCreditProvider extends ChangeNotifier {
     var data = jsonEncode({
       'order_amount': planMap!['price'].toString(),
       "order_note": planMap!['name'],
-      'uid': User.fromBox().uid.toString(),
+      'id': User.fromBox().id.toString(),
       'customer_name': user.name,
       'customer_email': user.email,
       'customer_phone': '+91${user.number}',
@@ -77,7 +77,7 @@ class AddCreditProvider extends ChangeNotifier {
     Uri url = Uri.parse('$host/updatecredit');
     var data = jsonEncode({
       'order_id': token,
-      'uid': User.fromBox().uid.toString(),
+      'id': User.fromBox().id.toString(),
       'plan_name': planMap!['name'],
     });
     var re = await post(url, headers: {'content-type': 'application/json'}, body: data);

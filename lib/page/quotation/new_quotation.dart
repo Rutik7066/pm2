@@ -290,7 +290,7 @@ class _NewQuotationState extends State<NewQuotation> {
                                   return null;
                                 }
                               },
-                              onSaved: (c) {
+                              onChanged: (c) {
                                 double? i = double.tryParse(c.toString());
                                 if (i != null) {
                                   provider.dis = i;
@@ -335,6 +335,14 @@ class _NewQuotationState extends State<NewQuotation> {
                                     provider.clearAll();
                                     cName.clear();
                                     cNumber.clear();
+                                        SnackBar snack = const SnackBar(
+                                      backgroundColor: Colors.green,
+                                      elevation: 5,
+                                      duration: Duration(seconds: 3),
+                                      content: Text('Quotation Created Succefully !.'),
+                                      behavior: SnackBarBehavior.floating,
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(snack);
                                   });
                                 }
                               }

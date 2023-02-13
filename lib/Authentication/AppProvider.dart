@@ -39,7 +39,7 @@ class AppProvider extends ChangeNotifier {
   }
 
   Future logOut() async {
-    Hive.box('dll12').delete('uid');
+    Hive.box('dll12').delete('id');
     Hive.box('dll12').delete('valid_till');
     isLoggedin = false;
     notifyListeners();
@@ -64,7 +64,7 @@ class AppProvider extends ChangeNotifier {
     print(res.body);
     if (res.statusCode == 200) {
       Map<String, dynamic> map = jsonDecode(res.body);
-      addUser(map).catchError((c) => null);
+      addUser(map,"").catchError((c) => null);
     }
   }
 }
