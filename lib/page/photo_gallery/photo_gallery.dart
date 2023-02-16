@@ -68,7 +68,7 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                 if (provider.reqCode == 1) {
                   return FutureBuilder(
                       initialData: const <RecordModel>[],
-                      future: pb.collection('folder').getFullList(batch: 200, sort: '-created', expand: "images"),
+                      future: pb.collection('folder').getFullList(batch: 200, sort: '-created', expand: "images", ),
                       builder: (context, snapshot) {
                         print('Photogapllery');
                         if (snapshot.hasData) {
@@ -87,7 +87,7 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                                       'Photo Gallery',
                                       style: textTheme.titleLarge,
                                     ),
-                                  ],
+                                  ],  
                                 ),
                               ),
                               Row(

@@ -131,7 +131,7 @@ class _LogInState extends State<LogIn> {
                       children: [
                         OutlinedBtn(
                           child: Text('Buy Now'),
-                          onPressed: () => launchUrlString('www.photographymanager.in/create-account'),
+                          onPressed: () => launchUrlString('www.photographymanager.in'),
                         ),
                         ElevatedBtn(
                           child: const Text('Log in'),

@@ -132,7 +132,6 @@ class CreateFolderProvider extends ChangeNotifier {
       'title': title,
       "length": images.length,
       "status": 0,
-      "customerid": customer,
       "images": [],
     };
 
@@ -160,9 +159,10 @@ class CreateFolderProvider extends ChangeNotifier {
       ]);
 
       body['images'].add(img.id);
-      compressingFile[qtyCompleted]['status'] = "Compressed";
-
+      compressingFile[qtyCompleted]['status'] = "Uploaded";
+      print(compressingFile[qtyCompleted]);
       qtyCompleted++;
+      print(qtyCompleted);
       notifyListeners();
     }
 

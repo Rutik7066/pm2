@@ -17,7 +17,7 @@ class FolderModal {
   final String collectionId;
   final String collectionName;
   final Expand expand;
-  final String customerid;
+  final String? customerid;
   final List<String> images;
   final String length;
   final String status;

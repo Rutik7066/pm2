@@ -7,6 +7,7 @@ import 'package:pm/Authentication/httpcall_dbop.dart';
 import 'package:pm/Authentication/user.dart';
 import 'package:pm/const.dart';
 import 'package:pm/pb.dart';
+import 'package:pocketbase/pocketbase.dart';
 
 class HttpCall {
   String orderId = '';
@@ -50,12 +51,17 @@ class HttpCall {
   }
 
   Future<bool> login({required String email, required String password}) async {
-    final authData = await pb.collection('userpm').authWithPassword(
-          email,
-          password,
-        );
-    log(authData.record!.id);
-    print(pb.authStore.isValid);
+    late RecordAuth authData;
+    try {
+      authData = await pb.collection('userpm').authWithPassword(
+            email,
+            password,
+          );
+      log(authData.record!.id);
+      print(pb.authStore.isValid);
+    } on ClientException catch (error) {
+      print(error.response["data"]);
+    }
 
     if (pb.authStore.isValid) {
       print(authData.record?.data);

@@ -186,7 +186,7 @@ class Profile extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Text(
-                          'Business  Address : ${user.bussinessname}',
+                          'Business  Address : ${user.bussinessadress}',
                           style: texttheme.bodyLarge,
                         ),
                       ),
