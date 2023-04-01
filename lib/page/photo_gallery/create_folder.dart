@@ -157,9 +157,8 @@ class _CreateFolderState extends State<CreateFolder> {
                         ),
                         onTap: () async {
                           FilePickerResult? result = await FilePicker.platform.pickFiles(
-                            allowCompression: true,
                             allowMultiple: true,
-                            lockParentWindow: false,
+                            allowedExtensions: ['jpg', "jpeg"],
                           );
                           if (result != null) {
                             provider.addImages(result.files);

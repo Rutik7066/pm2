@@ -106,6 +106,7 @@ Future<void> addUser(Map<String, dynamic> reqmap, id) async {
   await map.putAll(reqmap);
 }
 
+
 User getUser() {
   return User(
     id: map.get('id') ?? "",

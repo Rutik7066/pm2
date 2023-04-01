@@ -37,6 +37,8 @@ class _PhotoGalleryState extends State<PhotoGallery> {
     print('Build');
     final textTheme = Theme.of(context).textTheme;
     final provider = Provider.of<CloudGalleryProvider>(context);
+    final id = User.fromBox().id;
+
     return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
@@ -68,9 +70,9 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                 if (provider.reqCode == 1) {
                   return FutureBuilder(
                       initialData: const <RecordModel>[],
-                      future: pb.collection('folder').getFullList(batch: 200, sort: '-created', expand: "images", ),
+                      future: pb.collection('folder').getFullList(batch: 200, sort: '-created', expand: "images", filter: 'user = "$id"'),
                       builder: (context, snapshot) {
-                        print('Photogapllery');
+                        print('Photogapllery ${id}');
                         if (snapshot.hasData) {
                           List<FolderModal> folders = convertRecordToFolder(snapshot.data!);
                           String total = folders.length.toString();
@@ -87,7 +89,7 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                                       'Photo Gallery',
                                       style: textTheme.titleLarge,
                                     ),
-                                  ],  
+                                  ],
                                 ),
                               ),
                               Row(

@@ -100,6 +100,12 @@ class CreateFolderProvider extends ChangeNotifier {
     childSendPort.send(null);
   }
 
+  static String getFileSizeString({required int byts, int decimals = 0}) {
+    const suffixes = ["b", "kb", "mb", "gb", "tb"];
+    var i = (log(byts) / log(1024)).floor();
+    return ((byts / pow(1024, i)).toStringAsFixed(decimals)) + suffixes[i];
+  }
+
   static void isolateFunc(SendPort mainSendPort) async {
     // Creating own Recieve Port
     ReceivePort childReceivePort = ReceivePort();
@@ -110,12 +116,25 @@ class CreateFolderProvider extends ChangeNotifier {
       if (path is String) {
         print('Received Path => $path');
         File imageFile = File(path);
-        Im.Image? image = Im.decodeImage(imageFile.readAsBytesSync());
+        print("1");
+        final ib = imageFile.readAsBytesSync();
+        print("2");
+
+        Im.Image? image = Im.decodeImage(ib);
+        print("3");
+
         if (image != null) {
-          var bytes = Im.encodeJpg(image, quality: 30);
+          var rimage = Im.copyResize(image, width: 1000);
+          var bytes = Im.encodeJpg(
+            rimage,
+            quality: 100,
+          );
+
+          dev.log(getFileSizeString(byts: bytes.length));
           // Compress Done Sending bytes to main Isolate
           mainSendPort.send(bytes);
         }
+        print("4");
       } else {
         break;
       }
@@ -145,21 +164,21 @@ class CreateFolderProvider extends ChangeNotifier {
     notifyListeners();
 
     for (var image in images) {
-      // Sending Path to Compress
+      dev.log("Sending Path to Compress");
       childSendPort.send(image.path);
-      // Waiting for response
+      dev.log(" Waiting for response");
       var i = await childEvent.next;
-      // Printing Response
-      dev.log(i.toString());
+
+      dev.log("Uploading image");
       final img = await pb.collection('images').create(body: {
         "localurl": image.path,
         "isSelected": true,
       }, files: [
         http.MultipartFile.fromBytes('image', i, filename: image.name)
       ]);
-
+      dev.log("Uploaded");
       body['images'].add(img.id);
-      compressingFile[qtyCompleted]['status'] = "Uploaded";
+      compressingFile[qtyCompleted]['status'] = "Compresed";
       print(compressingFile[qtyCompleted]);
       qtyCompleted++;
       print(qtyCompleted);

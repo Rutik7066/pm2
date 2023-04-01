@@ -9,7 +9,6 @@ import 'package:image_compression_flutter/image_compression_flutter.dart';
 import 'package:pm/const.dart';
 import 'package:pm/db/folder_repo.dart';
 import 'package:pm/model/folder_image.dart';
-import 'package:pm/model/job_image_modal.dart';
 import 'package:pm/model/job_modal.dart';
 
 class FolderPageProvider extends ChangeNotifier {
