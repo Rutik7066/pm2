@@ -198,13 +198,16 @@ class CreateFolderProvider extends ChangeNotifier {
 
       notifyListeners();
       print(title);
-      String link = "https://photographymanager.in/photogallery?id=${record.id}";
+      String link = "https://www.photographymanager.in/photogallery?id=${record.id}";
       if (customer != null) {
         await Whatsapp().createMessage(
           number: customer!,
           message: "Click on this for selection $link",
         );
       }
+      images = [];
+      compressingFile = [];
+      customer = null;
       return link;
     } on ClientException catch (e) {
       dev.log(e.response["data"].toString());
